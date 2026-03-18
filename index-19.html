@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeneat Laundry Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1a4f8a;
+    --blue-light: #2d7dd2;
+    --blue-pale: #e8f2fd;
+    --sky: #c8e6f7;
+    --white: #ffffff;
+    --off-white: #f7fbff;
+    --text: #1a2332;
+    --text-muted: #5a6a7e;
+    --accent: #00b4d8;
+    --accent2: #f0a500;
+    --border: #ddeeff;
+    --shadow: 0 8px 40px rgba(26,79,138,0.10);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 70px;
+    box-shadow: 0 2px 20px rgba(26,79,138,0.07);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--blue); letter-spacing: -0.5px; cursor:pointer;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--text-muted);
+    font-size: 0.95rem; font-weight: 500;
+    transition: color 0.2s; cursor: pointer;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--blue); }
+  .nav-cta {
+    background: var(--blue) !important;
+    color: white !important;
+    padding: 0.5rem 1.3rem;
+    border-radius: 50px;
+    font-weight: 600 !important;
+  }
+  .nav-cta:hover { background: var(--blue-light) !important; }
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 5px;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--blue); border-radius: 2px; transition: all 0.3s;
+  }
+
+  /* PAGES */
+  .page { display: none; padding-top: 70px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* HOME HERO */
+  .hero {
+    min-height: calc(100vh - 70px);
+    background: linear-gradient(135deg, #e8f4fd 0%, #f7fbff 50%, #ddeeff 100%);
+    display: flex; align-items: center;
+    position: relative; overflow: hidden;
+    padding: 4rem 5%;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,180,216,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse 6s ease-in-out infinite;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -80px; left: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(26,79,138,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse 8s ease-in-out infinite reverse;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.7; }
+  }
+  .hero-content { max-width: 600px; position: relative; z-index: 1; animation: fadeUp 0.8s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent); color: white;
+    font-size: 0.8rem; font-weight: 600;
+    padding: 0.3rem 1rem; border-radius: 50px;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--blue); margin-bottom: 1.2rem;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p {
+    font-size: 1.1rem; color: var(--text-muted);
+    line-height: 1.7; margin-bottom: 2rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    background: var(--blue); color: white; border: none;
+    padding: 0.9rem 2rem; border-radius: 50px;
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    transition: all 0.3s; text-decoration: none; display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover {
+    background: var(--blue-light); transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(26,79,138,0.25);
+  }
+  .btn-outline {
+    background: transparent; color: var(--blue); border: 2px solid var(--blue);
+    padding: 0.9rem 2rem; border-radius: 50px;
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    transition: all 0.3s; text-decoration: none; display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-outline:hover { background: var(--blue); color: white; transform: translateY(-2px); }
+
+  /* STATS */
+  .stats-bar {
+    background: var(--blue); padding: 3rem 5%;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2rem; text-align: center;
+  }
+  .stat-item { color: white; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem; font-weight: 900; color: var(--accent); display: block;
+  }
+  .stat-label { font-size: 0.9rem; opacity: 0.85; margin-top: 0.3rem; }
+
+  /* SECTION */
+  .section { padding: 5rem 5%; }
+  .section-label {
+    font-size: 0.8rem; font-weight: 600; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 800; color: var(--blue); margin-bottom: 1rem; line-height: 1.2;
+  }
+  .section-sub {
+    color: var(--text-muted); font-size: 1rem;
+    max-width: 500px; line-height: 1.6; margin-bottom: 3rem;
+  }
+
+  /* SERVICES GRID */
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+  }
+  .service-card {
+    background: var(--off-white); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--accent));
+    transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+  }
+  .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--blue-light); }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    width: 60px; height: 60px; border-radius: 16px;
+    background: var(--blue-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin-bottom: 1.2rem;
+  }
+  .service-card h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+    color: var(--blue); margin-bottom: 0.5rem;
+  }
+  .service-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; }
+
+  /* TESTIMONIALS */
+  .testimonials { background: var(--off-white); }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+  }
+  .testi-card {
+    background: white; border-radius: 20px; padding: 2rem;
+    border: 1px solid var(--border); transition: all 0.3s;
+  }
+  .testi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .stars { color: var(--accent2); font-size: 1.1rem; margin-bottom: 1rem; }
+  .testi-text {
+    color: var(--text); font-size: 0.95rem;
+    line-height: 1.7; margin-bottom: 1.5rem; font-style: italic;
+  }
+  .testi-author { display: flex; align-items: center; gap: 0.8rem; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 1rem;
+  }
+  .testi-name { font-weight: 600; font-size: 0.9rem; color: var(--blue); }
+  .testi-loc { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* CTA BANNER */
+  .cta-banner {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+    padding: 5rem 5%; text-align: center; position: relative; overflow: hidden;
+  }
+  .cta-banner h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.5rem); color: white; margin-bottom: 1rem;
+  }
+  .cta-banner p { color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-size: 1rem; }
+  .btn-white {
+    background: white; color: var(--blue); border: none;
+    padding: 0.9rem 2.5rem; border-radius: 50px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+
+  /* PAGE HERO */
+  .page-hero {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+    padding: 5rem 5% 4rem; text-align: center; color: white;
+  }
+  .page-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 900; margin-bottom: 1rem;
+  }
+  .page-hero p { opacity: 0.85; font-size: 1.05rem; max-width: 500px; margin: 0 auto; }
+
+  /* SERVICES FULL */
+  .services-full {
+    padding: 5rem 5%;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;
+  }
+  .service-full-card {
+    border-radius: 24px; overflow: hidden; border: 1px solid var(--border); transition: all 0.3s;
+  }
+  .service-full-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+  .service-card-top {
+    background: linear-gradient(135deg, var(--blue-pale), var(--sky));
+    padding: 2.5rem 2rem; text-align: center;
+  }
+  .service-emoji { font-size: 3.5rem; }
+  .service-card-body { padding: 2rem; }
+  .service-card-body h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--blue); margin-bottom: 0.8rem;
+  }
+  .service-card-body p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.2rem; }
+  .service-features { list-style: none; }
+  .service-features li {
+    font-size: 0.88rem; color: var(--text); padding: 0.3rem 0;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .service-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+
+  .pricing-note {
+    background: var(--blue-pale); border-radius: 16px; padding: 2.5rem;
+    margin: 0 5% 5rem; text-align: center; border: 1px solid var(--border);
+  }
+  .pricing-note h3 {
+    font-family: 'Playfair Display', serif; color: var(--blue); font-size: 1.4rem; margin-bottom: 0.5rem;
+  }
+  .pricing-note p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.2rem; }
+
+  /* BOOKING */
+  .booking-layout {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: calc(100vh - 70px);
+  }
+  .booking-left {
+    background: linear-gradient(160deg, var(--blue) 0%, var(--blue-light) 100%);
+    padding: 4rem 3rem; color: white;
+    display: flex; flex-direction: column; justify-content: center;
+    position: sticky; top: 70px; height: calc(100vh - 70px);
+  }
+  .booking-left h2 {
+    font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900;
+    margin-bottom: 1rem; line-height: 1.2;
+  }
+  .booking-left > p { opacity: 0.85; font-size: 1rem; line-height: 1.6; margin-bottom: 2.5rem; }
+  .booking-info-items { display: flex; flex-direction: column; gap: 1.2rem; }
+  .booking-info-item { display: flex; align-items: flex-start; gap: 1rem; }
+  .booking-info-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .booking-info-item h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .booking-info-item p { font-size: 0.85rem; opacity: 0.75; margin: 0; }
+  .booking-right { padding: 3rem; background: var(--off-white); overflow-y: auto; }
+  .booking-form-title {
+    font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--blue); margin-bottom: 0.4rem;
+  }
+  .booking-form-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; }
+
+  .form-group { margin-bottom: 1.3rem; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%; padding: 0.85rem 1rem;
+    border: 1.5px solid var(--border); border-radius: 12px;
+    font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+    background: white; color: var(--text); transition: all 0.2s; outline: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(45,125,210,0.1);
+  }
+  .form-group textarea { resize: vertical; min-height: 90px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .radio-group { display: flex; gap: 1rem; }
+  .radio-option {
+    flex: 1; border: 1.5px solid var(--border); border-radius: 12px; padding: 0.85rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    cursor: pointer; transition: all 0.2s; background: white; font-size: 0.9rem;
+  }
+  .radio-option input[type="radio"] { accent-color: var(--blue); }
+  .radio-option:has(input:checked) { border-color: var(--blue); background: var(--blue-pale); color: var(--blue); }
+
+  .submit-btn {
+    width: 100%; background: var(--blue); color: white; border: none;
+    padding: 1rem; border-radius: 12px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.3s; margin-top: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .submit-btn:hover { background: var(--blue-light); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(26,79,138,0.25); }
+
+  .whatsapp-note {
+    text-align: center; font-size: 0.82rem; color: var(--text-muted);
+    margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  }
+  .success-msg {
+    display: none; background: #e8f8f0; border: 1px solid #5cb85c;
+    color: #2d6a4f; border-radius: 12px; padding: 1rem 1.2rem;
+    margin-top: 1rem; font-size: 0.9rem; text-align: center;
+  }
+
+  /* CONTACT */
+  .contact-layout {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    gap: 4rem; padding: 5rem 5%; max-width: 1100px; margin: 0 auto;
+  }
+  .contact-info h2 {
+    font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--blue); margin-bottom: 1rem;
+  }
+  .contact-info > p { color: var(--text-muted); line-height: 1.7; margin-bottom: 2.5rem; }
+  .contact-items { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-item { display: flex; align-items: flex-start; gap: 1rem; }
+  .contact-item-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--blue-pale); display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; flex-shrink: 0; border: 1px solid var(--border);
+  }
+  .contact-item h4 { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+  .contact-item p { font-size: 0.95rem; color: var(--text); font-weight: 500; line-height: 1.4; }
+  .social-section { margin-top: 2.5rem; }
+  .social-section h4 {
+    font-size: 0.85rem; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;
+  }
+  .social-links { display: flex; gap: 0.8rem; }
+  .social-link {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--blue-pale); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; cursor: pointer; text-decoration: none; transition: all 0.3s;
+  }
+  .social-link:hover { background: var(--blue); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(26,79,138,0.2); }
+  .contact-form-wrap {
+    background: white; border-radius: 24px; padding: 2.5rem;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .contact-form-wrap h3 {
+    font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--blue); margin-bottom: 0.3rem;
+  }
+  .contact-form-wrap > p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.8rem; }
+
+  /* FOOTER */
+  footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 3rem 5% 1.5rem; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; max-width: 280px; margin-top: 0.8rem; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900; color: white; }
+  .footer-logo span { color: var(--accent); }
+  .footer-col h4 {
+    color: white; font-size: 0.85rem; text-transform: uppercase;
+    letter-spacing: 1px; font-weight: 600; margin-bottom: 1rem;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { font-size: 0.88rem; padding: 0.3rem 0; cursor: pointer; transition: color 0.2s; }
+  .footer-col ul li:hover { color: var(--accent); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;
+    display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem;
+  }
+
+  /* REVEAL ANIMATION */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .booking-layout { grid-template-columns: 1fr; }
+    .booking-left { position: static; height: auto; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  }
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .nav-links.open {
+      display: flex; flex-direction: column;
+      position: fixed; top: 70px; left: 0; right: 0;
+      background: white; padding: 2rem;
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow); gap: 1rem;
+    }
+    .hamburger { display: flex; }
+    .form-row { grid-template-columns: 1fr; }
+    .radio-group { flex-direction: column; }
+    .booking-right { padding: 2rem 1.5rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">Zeneat<span>.</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a onclick="showPage('services')" id="nav-services">Services</a></li>
+    <li><a onclick="showPage('booking')" id="nav-booking">Book Now</a></li>
+    <li><a onclick="showPage('contact')" id="nav-contact">Contact</a></li>
+    <li><a onclick="showPage('booking')" class="nav-cta">Book a Pickup</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ========== HOME ========== -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-badge">🧺 Lagos' Trusted Laundry</span>
+      <h1>Fresh Clothes.<br><em>Zero Stress.</em><br>Every Time.</h1>
+      <p>From pickup to perfect — Zeneat Laundry delivers spotless results right to your door. Professional laundry care you can count on.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="showPage('booking')">Book a Pickup</button>
+        <button class="btn-outline" onclick="showPage('services')">Our Services</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats-bar">
+    <div class="stat-item reveal"><span class="stat-num">500+</span><span class="stat-label">Happy Clients</span></div>
+    <div class="stat-item reveal"><span class="stat-num">4.9★</span><span class="stat-label">Average Rating</span></div>
+    <div class="stat-item reveal"><span class="stat-num">24hr</span><span class="stat-label">Turnaround Time</span></div>
+    <div class="stat-item reveal"><span class="stat-num">100%</span><span class="stat-label">Satisfaction Guaranteed</span></div>
+  </div>
+
+  <section class="section">
+    <p class="section-label">What We Do</p>
+    <h2 class="section-title">Services Built for<br>Your Lifestyle</h2>
+    <p class="section-sub">From everyday washing to delicate dry cleaning — we handle it all with care and professionalism.</p>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">🫧</div>
+        <h3>Wash & Fold</h3>
+        <p>Your clothes washed, dried and neatly folded — ready to wear. Perfect for everyday laundry needs.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">👔</div>
+        <h3>Dry Cleaning</h3>
+        <p>Specialist care for suits, dresses, and delicate fabrics. Cleaned and pressed to perfection every time.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">♨️</div>
+        <h3>Ironing Only</h3>
+        <p>Already washed? Let us press your clothes to a sharp, crisp finish that lasts all day long.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section testimonials">
+    <p class="section-label">Testimonials</p>
+    <h2 class="section-title">What Our Clients Say</h2>
+    <p class="section-sub">Real words from real people who trust Zeneat with their clothes.</p>
+    <div class="testimonials-grid">
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Zeneat picked up my clothes in the morning and delivered them fresh by evening. I've never had laundry this easy!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div><div class="testi-name">Amaka O.</div><div class="testi-loc">Lagos Island</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"My suits come back looking brand new every time. Zeneat's dry cleaning service is absolutely top notch."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">K</div>
+          <div><div class="testi-name">Kemi A.</div><div class="testi-loc">Lekki</div></div>
+        </div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Professional, punctual and affordable. I recommended Zeneat to my whole office and everyone loves them."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">T</div>
+          <div><div class="testi-name">Tunde B.</div><div class="testi-loc">Victoria Island</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-banner">
+    <h2>Ready for Effortlessly Clean Clothes?</h2>
+    <p>Book a pickup today and experience the Zeneat difference.</p>
+    <button class="btn-white" onclick="showPage('booking')">Schedule My Pickup →</button>
+  </section>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">Zeneat<span>.</span></div>
+        <p>Professional laundry services in Lagos. We pick up, clean, and deliver — so you can focus on what matters.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li onclick="showPage('home')">Home</li>
+          <li onclick="showPage('services')">Services</li>
+          <li onclick="showPage('booking')">Book Now</li>
+          <li onclick="showPage('contact')">Contact</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li>Wash & Fold</li>
+          <li>Dry Cleaning</li>
+          <li>Ironing Only</li>
+          <li>Pickup & Delivery</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Zeneat Laundry Services. All rights reserved.</span>
+      <span>Built with ❤️ for Lagos</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ========== SERVICES ========== -->
+<div class="page" id="page-services">
+  <div class="page-hero">
+    <h1>Our Services</h1>
+    <p>Professional laundry care tailored to your needs, with pickup and delivery available across Lagos.</p>
+  </div>
+
+  <div class="services-full">
+    <div class="service-full-card reveal">
+      <div class="service-card-top"><div class="service-emoji">🫧</div></div>
+      <div class="service-card-body">
+        <h3>Wash & Fold</h3>
+        <p>Our most popular service. We collect your laundry, wash with premium detergents, tumble dry, and fold everything neatly.</p>
+        <ul class="service-features">
+          <li>Sorted by colour & fabric type</li>
+          <li>Premium, gentle detergents used</li>
+          <li>Neatly folded & bagged</li>
+          <li>24-hour turnaround available</li>
+          <li>Pickup & delivery included</li>
+        </ul>
+      </div>
+    </div>
+    <div class="service-full-card reveal">
+      <div class="service-card-top"><div class="service-emoji">👔</div></div>
+      <div class="service-card-body">
+        <h3>Dry Cleaning</h3>
+        <p>Expert care for your most delicate and valuable garments — suits, gowns, lace, and more. We treat each item individually.</p>
+        <ul class="service-features">
+          <li>Safe for all delicate fabrics</li>
+          <li>Professional spot treatment</li>
+          <li>Suits, gowns, traditional wear</li>
+          <li>Carefully steamed & pressed</li>
+          <li>Packaged in protective covers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="service-full-card reveal">
+      <div class="service-card-top"><div class="service-emoji">♨️</div></div>
+      <div class="service-card-body">
+        <h3>Ironing Only</h3>
+        <p>Already washed your clothes but need that sharp, crisp finish? Schedule a pickup — we'll handle the pressing.</p>
+        <ul class="service-features">
+          <li>Commercial-grade steam irons</li>
+          <li>Crisp, long-lasting press</li>
+          <li>Shirts, trousers, uniforms</li>
+          <li>Same-day option available</li>
+          <li>Hung or folded on request</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="pricing-note reveal">
+    <h3>💬 Pricing Based on Your Order</h3>
+    <p>Every order is different — the price depends on the type of service, quantity, and fabric. Book now and we'll give you a quote on WhatsApp before we begin.</p>
+    <button class="btn-primary" onclick="showPage('booking')">Get a Quote & Book</button>
+  </div>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">Zeneat<span>.</span></div>
+        <p>Professional laundry services in Lagos. We pick up, clean, and deliver — so you can focus on what matters.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li onclick="showPage('home')">Home</li>
+          <li onclick="showPage('services')">Services</li>
+          <li onclick="showPage('booking')">Book Now</li>
+          <li onclick="showPage('contact')">Contact</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li>Wash & Fold</li>
+          <li>Dry Cleaning</li>
+          <li>Ironing Only</li>
+          <li>Pickup & Delivery</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Zeneat Laundry Services. All rights reserved.</span>
+      <span>Built with ❤️ for Lagos</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ========== BOOKING ========== -->
+<div class="page" id="page-booking">
+  <div class="booking-layout">
+    <div class="booking-left">
+      <h2>Book Your Laundry Pickup</h2>
+      <p>Fill in the form and we'll confirm your booking via WhatsApp within minutes.</p>
+      <div class="booking-info-items">
+        <div class="booking-info-item">
+          <div class="booking-info-icon">📍</div>
+          <div><h4>We Come to You</h4><p>Pickup and delivery available across Lagos</p></div>
+        </div>
+        <div class="booking-info-item">
+          <div class="booking-info-icon">⚡</div>
+          <div><h4>Fast Turnaround</h4><p>Most orders ready within 24 hours</p></div>
+        </div>
+        <div class="booking-info-item">
+          <div class="booking-info-icon">💬</div>
+          <div><h4>WhatsApp Confirmation</h4><p>We'll reach out to confirm your booking details</p></div>
+        </div>
+        <div class="booking-info-item">
+          <div class="booking-info-icon">🛡️</div>
+          <div><h4>Safe & Trusted</h4><p>500+ happy clients across Lagos</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-right">
+      <h2 class="booking-form-title">Schedule Your Pickup</h2>
+      <p class="booking-form-sub">All fields required. We'll confirm via WhatsApp shortly.</p>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="bName" placeholder="e.g. Amaka Johnson" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="bPhone" placeholder="e.g. 08012345678" />
+      </div>
+      <div class="form-group">
+        <label>Pickup Address</label>
+        <input type="text" id="bAddress" placeholder="e.g. 12 Adebayo Street, Surulere, Lagos" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Preferred Date</label>
+          <input type="date" id="bDate" />
+        </div>
+        <div class="form-group">
+          <label>Preferred Time</label>
+          <input type="time" id="bTime" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Type of Service</label>
+        <select id="bService">
+          <option value="">-- Select a service --</option>
+          <option>Wash & Fold</option>
+          <option>Dry Cleaning</option>
+          <option>Ironing Only</option>
+          <option>Wash & Fold + Ironing</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Estimated Quantity of Clothes</label>
+        <select id="bQty">
+          <option value="">-- Select quantity --</option>
+          <option>Small (1–10 items)</option>
+          <option>Medium (11–25 items)</option>
+          <option>Large (26–50 items)</option>
+          <option>Extra Large (50+ items)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Pickup or Drop-off?</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="bType" value="Pickup & Delivery" checked> 🚗 Pickup & Delivery
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="bType" value="I'll Drop Off"> 🚶 I'll Drop Off
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Special Instructions (optional)</label>
+        <textarea id="bNotes" placeholder="e.g. Handle white shirts with extra care, avoid fabric softener..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitBooking()">📲 Send Booking via WhatsApp</button>
+      <p class="whatsapp-note">🔒 Details go directly to Zeneat's WhatsApp. No spam, ever.</p>
+      <div class="success-msg" id="bookingSuccess">✅ Redirecting you to WhatsApp to confirm your booking...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== CONTACT ========== -->
+<div class="page" id="page-contact">
+  <div class="page-hero">
+    <h1>Get In Touch</h1>
+    <p>Have questions? We're always happy to help. Reach out and we'll respond quickly.</p>
+  </div>
+
+  <div class="contact-layout">
+    <div class="contact-info">
+      <h2>We'd Love to Hear From You</h2>
+      <p>Whether you have a question about our services, pricing, or want to discuss a special order — we're here for you.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon">📱</div>
+          <div><h4>WhatsApp / Phone</h4><p>+234 813 359 7409</p></div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <h4>Address</h4>
+            <p>Dape Alonh Karmo Road, Opposite Blessed Emma Block Industry, By Five Storey Building, Olu Awotesu St, Lagos</p>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div><h4>Working Hours</h4><p>Monday – Saturday: 7am – 8pm<br>Sunday: 9am – 4pm</p></div>
+        </div>
+      </div>
+      <div class="social-section">
+        <h4>Follow Us</h4>
+        <div class="social-links">
+          <a class="social-link" href="https://wa.me/2348133597409" target="_blank" title="WhatsApp">💬</a>
+          <a class="social-link" href="https://www.facebook.com/ZeneatLaundry" target="_blank" title="Facebook">📘</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap reveal">
+      <h3>Send Us a Message</h3>
+      <p>We'll get back to you on WhatsApp as soon as possible.</p>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="cName" placeholder="e.g. Tunde Bello" />
+      </div>
+      <div class="form-group">
+        <label>Your Phone Number</label>
+        <input type="tel" id="cPhone" placeholder="e.g. 08012345678" />
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <select id="cSubject">
+          <option value="">-- What's this about? --</option>
+          <option>Pricing Enquiry</option>
+          <option>Service Question</option>
+          <option>Booking Help</option>
+          <option>Complaint / Feedback</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea id="cMessage" placeholder="Type your message here..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitContact()">💬 Send via WhatsApp</button>
+      <div class="success-msg" id="contactSuccess">✅ Redirecting you to WhatsApp...</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">Zeneat<span>.</span></div>
+        <p>Professional laundry services in Lagos. We pick up, clean, and deliver — so you can focus on what matters.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li onclick="showPage('home')">Home</li>
+          <li onclick="showPage('services')">Services</li>
+          <li onclick="showPage('booking')">Book Now</li>
+          <li onclick="showPage('contact')">Contact</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li>Wash & Fold</li>
+          <li>Dry Cleaning</li>
+          <li>Ironing Only</li>
+          <li>Pickup & Delivery</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Zeneat Laundry Services. All rights reserved.</span>
+      <span>Built with ❤️ for Lagos</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+  const WA = '2348133597409';
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a[id^="nav-"]').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    const el = document.getElementById('nav-' + id);
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+    document.getElementById('navLinks').classList.remove('open');
+    setTimeout(triggerReveal, 100);
+  }
+
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  function triggerReveal() {
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight - 60) {
+        el.classList.add('visible');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', triggerReveal);
+  setTimeout(triggerReveal, 300);
+
+  // Set min date to today
+  const todayStr = new Date().toISOString().split('T')[0];
+  const dateEl = document.getElementById('bDate');
+  if (dateEl) dateEl.min = todayStr;
+
+  function submitBooking() {
+    const name = document.getElementById('bName').value.trim();
+    const phone = document.getElementById('bPhone').value.trim();
+    const address = document.getElementById('bAddress').value.trim();
+    const date = document.getElementById('bDate').value;
+    const time = document.getElementById('bTime').value;
+    const service = document.getElementById('bService').value;
+    const qty = document.getElementById('bQty').value;
+    const type = document.querySelector('input[name="bType"]:checked')?.value || '';
+    const notes = document.getElementById('bNotes').value.trim();
+
+    if (!name || !phone || !address || !date || !time || !service || !qty) {
+      alert('Please fill in all required fields before submitting.');
+      return;
+    }
+
+    const msg =
+      `🧺 *NEW BOOKING — Zeneat Laundry*\n\n` +
+      `👤 *Name:* ${name}\n` +
+      `📱 *Phone:* ${phone}\n` +
+      `📍 *Address:* ${address}\n` +
+      `📅 *Date:* ${date}\n` +
+      `🕐 *Time:* ${time}\n\n` +
+      `👕 *Service:* ${service}\n` +
+      `📦 *Quantity:* ${qty}\n` +
+      `🚗 *Option:* ${type}\n` +
+      (notes ? `📝 *Notes:* ${notes}\n` : '') +
+      `\n_Sent from ZeneatLaundry.com_`;
+
+    document.getElementById('bookingSuccess').style.display = 'block';
+    setTimeout(() => window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank'), 800);
+  }
+
+  function submitContact() {
+    const name = document.getElementById('cName').value.trim();
+    const phone = document.getElementById('cPhone').value.trim();
+    const subject = document.getElementById('cSubject').value;
+    const message = document.getElementById('cMessage').value.trim();
+
+    if (!name || !phone || !subject || !message) {
+      alert('Please fill in all fields before sending.');
+      return;
+    }
+
+    const msg =
+      `💬 *CONTACT MESSAGE — Zeneat Laundry*\n\n` +
+      `👤 *Name:* ${name}\n` +
+      `📱 *Phone:* ${phone}\n` +
+      `📌 *Subject:* ${subject}\n` +
+      `📝 *Message:* ${message}\n` +
+      `\n_Sent from ZeneatLaundry.com_`;
+
+    document.getElementById('contactSuccess').style.display = 'block';
+    setTimeout(() => window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`, '_blank'), 800);
+  }
+</script>
+</body>
+</html>
